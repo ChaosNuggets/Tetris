@@ -11,6 +11,9 @@ public class MovePieces : MonoBehaviour
     private const float SOFTDROPTIME = 1f / 60f;
     private const float REGULARDROPTIME = 0.75f;
     private float timeBetweenDrops = REGULARDROPTIME;
+    public GameObject floor;
+    public GameObject rightWall;
+    public GameObject leftWall;
 
     // Update is called once per frame
     void Update()
@@ -26,14 +29,15 @@ public class MovePieces : MonoBehaviour
         bool isLeftPressed = horizontal < 0;
         if (hasHorizontalBeenReleased)
         {
-            if (isRightPressed)
+            bool isTouchingRight = ActivePieces.currentPiece.isTouching(rightWall);
+            bool isTouchingLeft = ActivePieces.currentPiece.isTouching(leftWall);
+            if (isRightPressed && !isTouchingRight)
             {
-                ActivePieces.currentTetromino.movePieceR(new Vector3(1, 0));
+                ActivePieces.currentPiece.movePieceR(new Vector3(1, 0));
                 hasHorizontalBeenReleased = false;
-            }
-            else if (isLeftPressed)
+            } else if (isLeftPressed && !isTouchingLeft)
             {
-                ActivePieces.currentTetromino.movePieceR(new Vector3(-1, 0));
+                ActivePieces.currentPiece.movePieceR(new Vector3(-1, 0));
                 hasHorizontalBeenReleased = false;
             }
         }
@@ -45,8 +49,27 @@ public class MovePieces : MonoBehaviour
 
     private void handleVerticalMovement()
     {
+        if (shouldLockPiece())
+        {
+            ActivePieces.currentPiece.lockPiece();
+            timeSinceLastDrop = 0;
+            return;
+        }
         handleDownInput();
         makePieceFall();
+    }
+
+    private bool shouldLockPiece()
+    {
+        bool isTouchingFloor = ActivePieces.currentPiece.isTouching(floor);
+        Debug.Log($"isTouchingFloor: {isTouchingFloor}");
+        Debug.Log($"timeSinceLastDrop: {timeSinceLastDrop}");
+        if (isTouchingFloor && timeSinceLastDrop >= timeBetweenDrops)
+        {
+            timeSinceLastDrop = 0;
+            return true;
+        }
+        return false;
     }
 
     private void handleDownInput()
@@ -58,11 +81,11 @@ public class MovePieces : MonoBehaviour
 
     private void makePieceFall()
     {
-        timeSinceLastDrop += Time.deltaTime;
         if (timeSinceLastDrop >= timeBetweenDrops)
         {
-            ActivePieces.currentTetromino.movePieceR(new Vector3(0, -1));
+            ActivePieces.currentPiece.movePieceR(new Vector3(0, -1));
             timeSinceLastDrop = 0;
         }
+        timeSinceLastDrop += Time.deltaTime;
     }
 }

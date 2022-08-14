@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class ActivePieces : MonoBehaviour
 {
-    public static Piece nextTetromino;
-    public static Piece currentTetromino;
+    public static Piece nextPiece;
+    public static Piece currentPiece;
+    public static List<GameObject> placedBoxes = new();
 
     void OnEnable()
     {
-        nextTetromino = ScriptableObject.CreateInstance<Piece>();
-        currentTetromino = ScriptableObject.CreateInstance<Piece>();
+        nextPiece = ScriptableObject.CreateInstance<Piece>();
+        currentPiece = ScriptableObject.CreateInstance<Piece>();
     }
 }

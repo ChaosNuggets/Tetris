@@ -11,7 +11,7 @@ public class SpawnPieces : MonoBehaviour
      * 5 L
      * 6 Line
      */
-    private static int nextTetrominoNum = -1;
+    private static int nextPieceNum = -1;
     public GameObject nextBox;
     public GameObject board;
     private static Vector3 NEXTBOXPOS;
@@ -21,7 +21,7 @@ public class SpawnPieces : MonoBehaviour
         new Vector3(0.5f, -0.5f),
         new Vector3(0.5f, -0.5f),
         new Vector3(0.5f, -0.5f),
-        new Vector3(0, -1),
+        new Vector3(-0.5f, -0.5f),
         new Vector3(0.5f, -0.5f),
         new Vector3(0.5f, -0.5f),
         new Vector3(0.5f, -0.5f)
@@ -31,7 +31,7 @@ public class SpawnPieces : MonoBehaviour
         new Vector3(0, 0),
         new Vector3(0, 0),
         new Vector3(0, 0),
-        new Vector3(0, -0.5f),
+        new Vector3(-0.5f, 0),
         new Vector3(0, 0),
         new Vector3(0, 0),
         new Vector3(0.5f, -0.5f)
@@ -58,24 +58,24 @@ public class SpawnPieces : MonoBehaviour
         TOPOFBOARD = board.transform.position + new Vector3(0, boardHeight / 2);
     }
 
-    private void moveNextToBoard()
+    private static void moveNextToBoard()
     {
-        ActivePieces.currentTetromino.createPiece(nextTetrominoNum, TOPOFBOARD + boardSpawnOffsets[nextTetrominoNum]);
+        ActivePieces.currentPiece.createPiece(nextPieceNum, TOPOFBOARD + boardSpawnOffsets[nextPieceNum]);
     }
 
-    private void spawnNextPiece()
+    private static void spawnNextPiece()
     {
-        int tetrominoNum = Random.Range(0, 7);
+        int pieceNum = Random.Range(0, 7);
         //Reroll if it's a repeat
-        if (tetrominoNum == nextTetrominoNum)
+        if (pieceNum == nextPieceNum)
         {
-            tetrominoNum = Random.Range(0, 7);
+            pieceNum = Random.Range(0, 7);
         }
-        nextTetrominoNum = tetrominoNum;
-        ActivePieces.nextTetromino.createPiece(tetrominoNum, NEXTBOXPOS + nextBoxSpawnOffsets[tetrominoNum]);
+        nextPieceNum = pieceNum;
+        ActivePieces.nextPiece.createPiece(pieceNum, NEXTBOXPOS + nextBoxSpawnOffsets[pieceNum], true);
     }
 
-    private void generateNewPiece()
+    public static void generateNewPiece()
     {
         moveNextToBoard();
         spawnNextPiece();

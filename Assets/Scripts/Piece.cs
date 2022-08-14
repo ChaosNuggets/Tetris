@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Piece", order = 1)]
+//[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Piece", order = 1)]
 public class Piece : ScriptableObject
 {
     /* 
@@ -14,31 +14,33 @@ public class Piece : ScriptableObject
      * 5 L
      * 6 Line
      */
-    public static GameObject[] tetrominoes = new GameObject[7];
-    private GameObject tetromino = null;
-    public int tetrominoNum;
-
-    //public something[4] rotationInstructions;
+    public static GameObject[] pieces = new GameObject[7];
+    private GameObject piece = null;
+    private Rigidbody2D rb;
+    private CompositeCollider2D collider;
+    public int pieceNum;
 
     private void OnEnable()
     {
-        tetrominoes[0] = Resources.Load<GameObject>("T");
-        tetrominoes[1] = Resources.Load<GameObject>("J");
-        tetrominoes[2] = Resources.Load<GameObject>("Z");
-        tetrominoes[3] = Resources.Load<GameObject>("Square");
-        tetrominoes[4] = Resources.Load<GameObject>("S");
-        tetrominoes[5] = Resources.Load<GameObject>("L");
-        tetrominoes[6] = Resources.Load<GameObject>("Line");
+        pieces[0] = Resources.Load<GameObject>("T");
+        pieces[1] = Resources.Load<GameObject>("J");
+        pieces[2] = Resources.Load<GameObject>("Z");
+        pieces[3] = Resources.Load<GameObject>("Square");
+        pieces[4] = Resources.Load<GameObject>("S");
+        pieces[5] = Resources.Load<GameObject>("L");
+        pieces[6] = Resources.Load<GameObject>("Line");
     }
 
-    public void createPiece(int tetrominoNum, Vector3 spawnPos)
+    public void createPiece(int pieceNum, Vector3 spawnPos, bool destroyPiece = false)
     {
-        this.tetrominoNum = tetrominoNum;
-        if (tetromino != null)
+        this.pieceNum = pieceNum;
+        if (destroyPiece)
         {
-            Destroy(tetromino);
+            Destroy(piece);
         }
-        tetromino = Instantiate(tetrominoes[tetrominoNum], spawnPos, Quaternion.identity);
+        piece = Instantiate(pieces[pieceNum], spawnPos, Quaternion.identity);
+        rb = piece.GetComponent<Rigidbody2D>();
+        collider = piece.GetComponent<CompositeCollider2D>();
     }
 
     //public void movePiece(Vector3 movePos)
@@ -48,6 +50,22 @@ public class Piece : ScriptableObject
 
     public void movePieceR(Vector3 movePos)
     {
-        tetromino.transform.position += movePos;
+        rb.MovePosition(piece.transform.position + movePos);
+    }
+
+    public bool isTouching(GameObject gameObject)
+    {
+        Collider2D cl = gameObject.GetComponent<Collider2D>();
+        return collider.IsTouching(cl);
+    }
+
+    public void lockPiece()
+    {
+        foreach (Transform box in piece.transform)
+        {
+            ActivePieces.placedBoxes.Add(box.gameObject);
+        }
+        piece.transform.DetachChildren();
+        SpawnPieces.generateNewPiece();
     }
 }
