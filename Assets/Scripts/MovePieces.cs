@@ -9,11 +9,9 @@ public class MovePieces : MonoBehaviour
     private bool hasHorizontalBeenReleased = true;
     private float timeSinceLastDrop = 0;
     private const float SOFTDROPTIME = 1f / 60f;
-    private const float REGULARDROPTIME = 0.75f;
+    private const float REGULARDROPTIME = 1;
     private float timeBetweenDrops = REGULARDROPTIME;
-    public GameObject floor;
-    public GameObject rightWall;
-    public GameObject leftWall;
+    public static bool justLocked = false;
 
     // Update is called once per frame
     void Update()
@@ -29,8 +27,14 @@ public class MovePieces : MonoBehaviour
         bool isLeftPressed = horizontal < 0;
         if (hasHorizontalBeenReleased)
         {
-            bool isTouchingRight = ActivePieces.currentPiece.isTouching(rightWall);
-            bool isTouchingLeft = ActivePieces.currentPiece.isTouching(leftWall);
+            bool isTouchingRightWall = ActivePieces.currentPiece.isTouchingRightWall();
+            bool isTouchingPieceRight = ActivePieces.currentPiece.isTouchingPieceRight();
+            bool isTouchingRight = isTouchingRightWall || isTouchingPieceRight;
+
+            bool isTouchingLeftWall = ActivePieces.currentPiece.isTouchingLeftWall();
+            bool isTouchingPieceLeft = ActivePieces.currentPiece.isTouchingPieceLeft();
+            bool isTouchingLeft = isTouchingLeftWall || isTouchingPieceLeft;
+
             if (isRightPressed && !isTouchingRight)
             {
                 ActivePieces.currentPiece.movePieceR(new Vector3(1, 0));
@@ -49,43 +53,39 @@ public class MovePieces : MonoBehaviour
 
     private void handleVerticalMovement()
     {
-        if (shouldLockPiece())
-        {
-            ActivePieces.currentPiece.lockPiece();
-            timeSinceLastDrop = 0;
-            return;
-        }
         handleDownInput();
         makePieceFall();
-    }
-
-    private bool shouldLockPiece()
-    {
-        bool isTouchingFloor = ActivePieces.currentPiece.isTouching(floor);
-        Debug.Log($"isTouchingFloor: {isTouchingFloor}");
-        Debug.Log($"timeSinceLastDrop: {timeSinceLastDrop}");
-        if (isTouchingFloor && timeSinceLastDrop >= timeBetweenDrops)
-        {
-            timeSinceLastDrop = 0;
-            return true;
-        }
-        return false;
     }
 
     private void handleDownInput()
     {
         float vertical = Input.GetAxis("Vertical");
         bool isDownPressed = vertical < 0;
-        timeBetweenDrops = (isDownPressed ? SOFTDROPTIME : REGULARDROPTIME);
+        if (isDownPressed)
+        {
+            timeBetweenDrops = justLocked ? REGULARDROPTIME : SOFTDROPTIME;
+        } else
+        {
+            justLocked = false;
+            timeBetweenDrops = REGULARDROPTIME;
+        }
     }
 
     private void makePieceFall()
     {
+        timeSinceLastDrop += Time.deltaTime;
         if (timeSinceLastDrop >= timeBetweenDrops)
         {
-            ActivePieces.currentPiece.movePieceR(new Vector3(0, -1));
+            bool isTouchingFloor = ActivePieces.currentPiece.isTouchingFloor();
+            bool isTouchingPieceTop = ActivePieces.currentPiece.isTouchingPieceTop();
+            if (isTouchingFloor || isTouchingPieceTop)
+            {
+                ActivePieces.currentPiece.lockPiece();
+            } else
+            {
+                ActivePieces.currentPiece.movePieceR(new Vector3(0, -1));
+            }
             timeSinceLastDrop = 0;
         }
-        timeSinceLastDrop += Time.deltaTime;
     }
 }

@@ -45,12 +45,6 @@ public class SpawnPieces : MonoBehaviour
         generateNewPiece();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void initializeVariables()
     {
         NEXTBOXPOS = nextBox.transform.position;
@@ -71,6 +65,7 @@ public class SpawnPieces : MonoBehaviour
         {
             pieceNum = Random.Range(0, 7);
         }
+        //int pieceNum = 1;
         nextPieceNum = pieceNum;
         ActivePieces.nextPiece.createPiece(pieceNum, NEXTBOXPOS + nextBoxSpawnOffsets[pieceNum], true);
     }
