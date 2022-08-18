@@ -92,22 +92,11 @@ public class Piece : ScriptableObject
     {
         foreach (Vector3 unlockedPos in poses)
         {
-            float unlockedPosX = unlockedPos.x;
-            float unlockedPosY = unlockedPos.y;
-            foreach (GameObject box in ActivePieces.placedBoxes)
-            {
-                float lockedPosX = box.transform.position.x;
-                if (unlockedPosX != lockedPosX)
-                {
-                    continue;
-                }
-                float lockedPosY = box.transform.position.y;
-                if (unlockedPosY - lockedPosY != 1)
-                {
-                    continue;
-                }
-                return true;
-            }
+            float x = unlockedPos.x;
+            float y = unlockedPos.y;
+            int xIndex = ActivePieces.convertXtoIndex(x);
+            int yIndex = ActivePieces.convertYtoIndex(y);
+
         }
         return false;
     }
@@ -172,19 +161,19 @@ public class Piece : ScriptableObject
 
     public void lockPiece()
     {
-        addBoxesToList();
+        addBoxesToArray();
         MovePieces.justLocked = true;
         SpawnPieces.generateNewPiece();
     }
 
-    private void addBoxesToList()
+    private void addBoxesToArray()
     {
         foreach (Transform box in piece.transform)
         {
-            ActivePieces.placedBoxes.Add(box.gameObject);
+            ActivePieces.addBoxToPlacedBoxes(box);
         }
         piece.transform.DetachChildren();
-        ActivePieces.placedBoxes.Add(piece);
+        ActivePieces.addBoxToPlacedBoxes(piece);
     }
 
     public Vector3 getPosition()
