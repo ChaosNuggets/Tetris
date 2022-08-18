@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class RotatePieces : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown("z"))
+        {
+            ActivePieces.currentPiece.rotatePieceCCW();
+        }
+        if (Input.GetKeyDown("x"))
+        {
+            ActivePieces.currentPiece.rotatePieceCW();
+        }
     }
 }

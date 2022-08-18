@@ -17,7 +17,6 @@ public class Piece : ScriptableObject
     public static GameObject[] pieces = new GameObject[7];
     private GameObject piece = null;
     public int pieceNum;
-    private Vector3[] poses = new Vector3[4];
 
     private void OnEnable()
     {
@@ -38,7 +37,6 @@ public class Piece : ScriptableObject
             Destroy(piece);
         }
         piece = Instantiate(pieces[pieceNum], spawnPos, Quaternion.identity);
-        updatePoses();
     }
 
     //public void movePiece(Vector3 movePos)
@@ -49,7 +47,16 @@ public class Piece : ScriptableObject
     public void movePieceR(Vector3 movePos)
     {
         piece.transform.position += movePos;
-        updatePoses();
+    }
+
+    public void rotatePieceCCW()
+    {
+        piece.transform.Rotate(new Vector3(0, 0, 90));
+    }
+
+    public void rotatePieceCW()
+    {
+        piece.transform.Rotate(new Vector3(0, 0, -90));
     }
 
     public bool isTouchingRightWall()
@@ -90,35 +97,38 @@ public class Piece : ScriptableObject
 
     public bool isTouchingPieceTop()
     {
-        foreach (Vector3 unlockedPos in poses)
+        foreach (Transform transform in piece.transform)
         {
-            float x = unlockedPos.x;
-            float y = unlockedPos.y;
+            float x = transform.position.x;
+            float y = transform.position.y;
             int xIndex = ActivePieces.convertXtoIndex(x);
-            int yIndex = ActivePieces.convertYtoIndex(y);
-
+            int yIndex = ActivePieces.convertYtoIndex(y) - 1;
+            if (isOutOfBounds(xIndex, yIndex))
+            {
+                return false;
+            }
+            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            {
+                return true;
+            }
         }
         return false;
     }
 
     public bool isTouchingPieceRight()
     {
-        foreach (Vector3 unlockedPos in poses)
+        foreach (Transform transform in piece.transform)
         {
-            float unlockedPosX = unlockedPos.x;
-            float unlockedPosY = unlockedPos.y;
-            foreach (GameObject box in ActivePieces.placedBoxes)
+            float x = transform.position.x;
+            float y = transform.position.y;
+            int xIndex = ActivePieces.convertXtoIndex(x) + 1;
+            int yIndex = ActivePieces.convertYtoIndex(y);
+            if (isOutOfBounds(xIndex, yIndex))
             {
-                float lockedPosY = box.transform.position.y;
-                if (unlockedPosY != lockedPosY)
-                {
-                    continue;
-                }
-                float lockedPosX = box.transform.position.x;
-                if (unlockedPosX - lockedPosX != -1)
-                {
-                    continue;
-                }
+                return false;
+            }
+            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            {
                 return true;
             }
         }
@@ -126,37 +136,27 @@ public class Piece : ScriptableObject
     }
     public bool isTouchingPieceLeft()
     {
-        foreach (Vector3 unlockedPos in poses)
+        foreach (Transform transform in piece.transform)
         {
-            float unlockedPosX = unlockedPos.x;
-            float unlockedPosY = unlockedPos.y;
-            foreach (GameObject box in ActivePieces.placedBoxes)
+            float x = transform.position.x;
+            float y = transform.position.y;
+            int xIndex = ActivePieces.convertXtoIndex(x) - 1;
+            int yIndex = ActivePieces.convertYtoIndex(y);
+            if (isOutOfBounds(xIndex, yIndex))
             {
-                float lockedPosY = box.transform.position.y;
-                if (unlockedPosY != lockedPosY)
-                {
-                    continue;
-                }
-                float lockedPosX = box.transform.position.x;
-                if (unlockedPosX - lockedPosX != 1)
-                {
-                    continue;
-                }
+                return false;
+            }
+            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    private void updatePoses()
+    private static bool isOutOfBounds(int xIndex, int yIndex)
     {
-        int index = 0;
-        foreach (Transform unlockedTransform in piece.transform)
-        {
-            poses[index] = unlockedTransform.position;
-            index++;
-        }
-        poses[3] = piece.transform.position;
+        return (xIndex < 0 || xIndex > 9 || yIndex < 0 || yIndex > 19) ? true : false;
     }
 
     public void lockPiece()
@@ -174,10 +174,5 @@ public class Piece : ScriptableObject
         }
         piece.transform.DetachChildren();
         ActivePieces.addBoxToPlacedBoxes(piece);
-    }
-
-    public Vector3 getPosition()
-    {
-        return piece.transform.position;
     }
 }
