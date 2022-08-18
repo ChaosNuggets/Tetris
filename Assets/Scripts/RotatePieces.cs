@@ -4,17 +4,51 @@ using UnityEngine;
 
 public class RotatePieces : MonoBehaviour
 {
+    /* 
+     * 0 T
+     * 1 J
+     * 2 Z
+     * 3 Square
+     * 4 S
+     * 5 L
+     * 6 Line
+     */
+
+    public enum Rotation
+    {
+        CW = -90,
+        CCW = 90,
+        NONE = 0
+    }
+
+    //These are the rotation instructions when you press x
+    private Rotation[,] rotInstructions =
+    {
+        {Rotation.CW, Rotation.CW, Rotation.CW, Rotation.CW},
+        {Rotation.CW, Rotation.CW, Rotation.CW, Rotation.CW},
+        {Rotation.CCW, Rotation.CW, Rotation.CCW, Rotation.CW},
+        {Rotation.NONE, Rotation.NONE, Rotation.NONE, Rotation.NONE},
+        {Rotation.CCW, Rotation.CW, Rotation.CCW, Rotation.CW},
+        {Rotation.CW, Rotation.CW, Rotation.CW, Rotation.CW},
+        {Rotation.CW, Rotation.CCW, Rotation.CW, Rotation.CCW}
+    };
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown("z"))
         {
-            ActivePieces.currentPiece.rotatePieceCCW();
+            int rotStatus = ActivePieces.currentPiece.rotStatus;
+            int pieceNum = ActivePieces.currentPiece.pieceNum;
+            float instruction = ((float) rotInstructions[pieceNum, rotStatus]) * -1;
+            ActivePieces.currentPiece.rotatePiece(instruction);
         }
         if (Input.GetKeyDown("x"))
         {
-            ActivePieces.currentPiece.rotatePieceCW();
+            int rotStatus = ActivePieces.currentPiece.rotStatus;
+            int pieceNum = ActivePieces.currentPiece.pieceNum;
+            float instruction = (float)rotInstructions[pieceNum, rotStatus];
+            ActivePieces.currentPiece.rotatePiece(instruction);
         }
     }
 }

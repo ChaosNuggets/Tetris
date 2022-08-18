@@ -17,6 +17,7 @@ public class Piece : ScriptableObject
     public static GameObject[] pieces = new GameObject[7];
     private GameObject piece = null;
     public int pieceNum;
+    public int rotStatus = 0;
 
     private void OnEnable()
     {
@@ -32,6 +33,7 @@ public class Piece : ScriptableObject
     public void createPiece(int pieceNum, Vector3 spawnPos, bool destroyPiece = false)
     {
         this.pieceNum = pieceNum;
+        rotStatus = 0;
         if (destroyPiece)
         {
             Destroy(piece);
@@ -49,14 +51,16 @@ public class Piece : ScriptableObject
         piece.transform.position += movePos;
     }
 
-    public void rotatePieceCCW()
+    public void rotatePiece(float rotation)
     {
-        piece.transform.Rotate(new Vector3(0, 0, 90));
-    }
-
-    public void rotatePieceCW()
-    {
-        piece.transform.Rotate(new Vector3(0, 0, -90));
+        piece.transform.Rotate(new Vector3(0, 0, rotation));
+        if (rotStatus == 3)
+        {
+            rotStatus = 0;
+        } else
+        {
+            rotStatus++;
+        }
     }
 
     public bool isTouchingRightWall()

@@ -11,6 +11,7 @@ public class SpawnPieces : MonoBehaviour
      * 5 L
      * 6 Line
      */
+
     private static int nextPieceNum = -1;
     public GameObject nextBox;
     public GameObject board;
