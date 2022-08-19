@@ -7,7 +7,7 @@ public class ActivePieces : MonoBehaviour
     public static Piece nextPiece;
     public static Piece currentPiece;
     //x and y of the placed boxes (x is + 4.5 and y is + 9.5)
-    public static GameObject[,] placedBoxes = new GameObject[10, 20];
+    public static GameObject[,] placedBoxes = new GameObject[10, 23];
     void OnEnable()
     {
         nextPiece = ScriptableObject.CreateInstance<Piece>();

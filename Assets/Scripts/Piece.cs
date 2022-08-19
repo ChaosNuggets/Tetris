@@ -160,13 +160,14 @@ public class Piece : ScriptableObject
 
     private static bool isOutOfBounds(int xIndex, int yIndex)
     {
-        return (xIndex < 0 || xIndex > 9 || yIndex < 0 || yIndex > 19) ? true : false;
+        return (xIndex < 0 || xIndex > 9 || yIndex < 0 || yIndex > 22) ? true : false;
     }
 
     public void lockPiece()
     {
         addBoxesToArray();
         MovePieces.justLocked = true;
+        ClearRows.clearFullRows();
         SpawnPieces.generateNewPiece();
     }
 
