@@ -165,19 +165,9 @@ public class Piece : ScriptableObject
 
     public void lockPiece()
     {
-        addBoxesToArray();
+        ActivePieces.addBoxesToArray(piece);
         MovePieces.justLocked = true;
         ClearRows.clearFullRows();
         SpawnPieces.generateNewPiece();
-    }
-
-    private void addBoxesToArray()
-    {
-        foreach (Transform box in piece.transform)
-        {
-            ActivePieces.addBoxToPlacedBoxes(box);
-        }
-        piece.transform.DetachChildren();
-        ActivePieces.addBoxToPlacedBoxes(piece);
     }
 }

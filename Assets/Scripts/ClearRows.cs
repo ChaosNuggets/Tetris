@@ -39,7 +39,7 @@ public class ClearRows
         for (int column = 0; column < 10; column++)
         {
             Object.Destroy(ActivePieces.placedBoxes[column, row]);
-            ActivePieces.placedBoxes[column, row] = null; //a
+            ActivePieces.placedBoxes[column, row] = null;
         }
     }
 
@@ -52,8 +52,9 @@ public class ClearRows
                 if (ActivePieces.placedBoxes[column, row + 1] != null)
                 {
                     ActivePieces.placedBoxes[column, row + 1].transform.position -= new Vector3(0, 1);
-                    ActivePieces.placedBoxes[column, row] = Object.Instantiate(ActivePieces.placedBoxes[column, row + 1]); //a
+                    ActivePieces.placedBoxes[column, row] = Object.Instantiate(ActivePieces.placedBoxes[column, row + 1]);
                     Object.Destroy(ActivePieces.placedBoxes[column, row + 1]);
+                    ActivePieces.placedBoxes[column, row + 1] = null;
                 }
             }
         }
