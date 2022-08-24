@@ -42,6 +42,9 @@ public class SpawnPieces : MonoBehaviour
     void Start()
     {
         initializeVariables();
+
+        HandleLevels.setStartLevel(0);
+
         spawnNextPiece();
         generateNewPiece();
     }

@@ -22,6 +22,7 @@ public class ClearRows
             {
                 //Debug.Log($"Clearing row {row}");
                 clearRow(row, topOfBoard);
+                HandleLevels.addLineClear();
                 row--;
                 topOfBoard--;
             }
