@@ -28,11 +28,11 @@ public class MovePieces : MonoBehaviour
         if (hasHorizontalBeenReleased)
         {
             bool isTouchingRightWall = ActivePieces.currentPiece.isTouchingRightWall();
-            bool isTouchingPieceRight = ActivePieces.currentPiece.isTouchingPieceRight();
+            bool isTouchingPieceRight = ActivePieces.currentPiece.isTouchingBoxRight();
             bool isTouchingRight = isTouchingRightWall || isTouchingPieceRight;
 
             bool isTouchingLeftWall = ActivePieces.currentPiece.isTouchingLeftWall();
-            bool isTouchingPieceLeft = ActivePieces.currentPiece.isTouchingPieceLeft();
+            bool isTouchingPieceLeft = ActivePieces.currentPiece.isTouchingBoxLeft();
             bool isTouchingLeft = isTouchingLeftWall || isTouchingPieceLeft;
 
             if (isRightPressed && !isTouchingRight)
@@ -77,7 +77,7 @@ public class MovePieces : MonoBehaviour
         if (timeSinceLastDrop >= timeBetweenDrops)
         {
             bool isTouchingFloor = ActivePieces.currentPiece.isTouchingFloor();
-            bool isTouchingPieceTop = ActivePieces.currentPiece.isTouchingPieceTop();
+            bool isTouchingPieceTop = ActivePieces.currentPiece.isTouchingBoxTop();
             if (isTouchingFloor || isTouchingPieceTop)
             {
                 ActivePieces.currentPiece.lockPiece();

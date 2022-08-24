@@ -36,19 +36,29 @@ public class RotatePieces : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        handleZKey();
+        handleXKey();
+    }
+
+    private void handleZKey()
+    {
         if (Input.GetKeyDown("z"))
         {
             int rotStatus = ActivePieces.currentPiece.rotStatus;
             int pieceNum = ActivePieces.currentPiece.pieceNum;
-            float instruction = ((float) rotInstructions[pieceNum, rotStatus]) * -1;
-            ActivePieces.currentPiece.rotatePiece(instruction);
+            float instruction = ((float)rotInstructions[pieceNum, rotStatus]) * -1;
+            ActivePieces.currentPiece.tryToRotatePiece(instruction);
         }
+    }
+
+    private void handleXKey()
+    {
         if (Input.GetKeyDown("x"))
         {
             int rotStatus = ActivePieces.currentPiece.rotStatus;
             int pieceNum = ActivePieces.currentPiece.pieceNum;
             float instruction = (float)rotInstructions[pieceNum, rotStatus];
-            ActivePieces.currentPiece.rotatePiece(instruction);
+            ActivePieces.currentPiece.tryToRotatePiece(instruction);
         }
     }
 }

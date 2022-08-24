@@ -51,16 +51,63 @@ public class Piece : ScriptableObject
         piece.transform.position += movePos;
     }
 
-    public void rotatePiece(float rotation)
+    public void tryToRotatePiece(float rotation)
     {
         piece.transform.Rotate(new Vector3(0, 0, rotation));
-        if (rotStatus == 3)
+        if (isInsideBox() || isInsideFloor() || isInsideLeftWall() || isInsideRightWall())
         {
-            rotStatus = 0;
-        } else
-        {
-            rotStatus++;
+            piece.transform.Rotate(new Vector3(0, 0, -rotation));
+            return;
         }
+        rotStatus = (rotStatus == 3) ? 0 : rotStatus + 1;
+    }
+
+    private bool isInsideBox()
+    {
+        foreach (Transform transform in piece.transform)
+        {
+            if (testForBox(transform, 0, 0))
+            {
+                return true;
+            }
+        }
+        return testForBox(piece.transform, 0, 0);
+    }
+
+    private bool isInsideRightWall()
+    {
+        foreach (Transform transform in piece.transform)
+        {
+            if (transform.position.x >= 5)
+            {
+                return true;
+            }
+        }
+        return piece.transform.position.x >= 5;
+    }
+
+    private bool isInsideLeftWall()
+    {
+        foreach (Transform transform in piece.transform)
+        {
+            if (transform.position.x <= -5)
+            {
+                return true;
+            }
+        }
+        return piece.transform.position.x <= -5;
+    }
+
+    private bool isInsideFloor()
+    {
+        foreach (Transform transform in piece.transform)
+        {
+            if (transform.position.y <= -10)
+            {
+                return true;
+            }
+        }
+        return piece.transform.position.y <= -10;
     }
 
     public bool isTouchingRightWall()
@@ -99,7 +146,7 @@ public class Piece : ScriptableObject
         return piece.transform.position.y <= -9;
     }
 
-    public bool isTouchingPieceTop()
+    public bool isTouchingBoxTop()
     {
         foreach (Transform transform in piece.transform)
         {
@@ -111,7 +158,7 @@ public class Piece : ScriptableObject
         return testForBox(piece.transform, 0, -1);
     }
 
-    public bool isTouchingPieceRight()
+    public bool isTouchingBoxRight()
     {
         foreach (Transform transform in piece.transform)
         {
@@ -122,7 +169,7 @@ public class Piece : ScriptableObject
         }
         return testForBox(piece.transform, 1, 0);
     }
-    public bool isTouchingPieceLeft()
+    public bool isTouchingBoxLeft()
     {
         foreach (Transform transform in piece.transform)
         {
