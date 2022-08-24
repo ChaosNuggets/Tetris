@@ -20,7 +20,7 @@ public class ClearRows
             }
             if (shouldClear)
             {
-                Debug.Log($"Clearing row {row}");
+                //Debug.Log($"Clearing row {row}");
                 clearRow(row, topOfBoard);
                 row--;
                 topOfBoard--;
@@ -52,8 +52,7 @@ public class ClearRows
                 if (ActivePieces.placedBoxes[column, row + 1] != null)
                 {
                     ActivePieces.placedBoxes[column, row + 1].transform.position -= new Vector3(0, 1);
-                    ActivePieces.placedBoxes[column, row] = Object.Instantiate(ActivePieces.placedBoxes[column, row + 1]);
-                    Object.Destroy(ActivePieces.placedBoxes[column, row + 1]);
+                    ActivePieces.placedBoxes[column, row] = ActivePieces.placedBoxes[column, row + 1];
                     ActivePieces.placedBoxes[column, row + 1] = null;
                 }
             }

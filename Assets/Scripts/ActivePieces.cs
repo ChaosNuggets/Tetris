@@ -19,11 +19,9 @@ public class ActivePieces : MonoBehaviour
         foreach (Transform box in gameObject.transform)
         {
             addBoxToPlacedBoxes(box);
-            Destroy(box.gameObject);
         }
         gameObject.transform.DetachChildren();
         addBoxToPlacedBoxes(gameObject);
-        Destroy(gameObject);
     }
 
     public static void addBoxToPlacedBoxes(GameObject gameObject)
@@ -35,7 +33,7 @@ public class ActivePieces : MonoBehaviour
     {
         int x = convertXtoIndex(box.position.x);
         int y = convertYtoIndex(box.position.y);
-        placedBoxes[x, y] = Instantiate(box.gameObject, box.transform.position, Quaternion.identity);
+        placedBoxes[x, y] = box.gameObject;
     }
 
     public static int convertXtoIndex(float x)

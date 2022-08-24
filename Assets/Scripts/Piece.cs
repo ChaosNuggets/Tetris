@@ -72,7 +72,7 @@ public class Piece : ScriptableObject
                 return true;
             }
         }
-        return false;
+        return piece.transform.position.x >= 4;
     }
 
     public bool isTouchingLeftWall()
@@ -84,7 +84,7 @@ public class Piece : ScriptableObject
                 return true;
             }
         }
-        return false;
+        return piece.transform.position.x <= -4;
     }
 
     public bool isTouchingFloor()
@@ -96,66 +96,55 @@ public class Piece : ScriptableObject
                 return true;
             }
         }
-        return false;
+        return piece.transform.position.y <= -9;
     }
 
     public bool isTouchingPieceTop()
     {
         foreach (Transform transform in piece.transform)
         {
-            float x = transform.position.x;
-            float y = transform.position.y;
-            int xIndex = ActivePieces.convertXtoIndex(x);
-            int yIndex = ActivePieces.convertYtoIndex(y) - 1;
-            if (isOutOfBounds(xIndex, yIndex))
-            {
-                return false;
-            }
-            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            if (testForBox(transform, 0, -1))
             {
                 return true;
             }
         }
-        return false;
+        return testForBox(piece.transform, 0, -1);
     }
 
     public bool isTouchingPieceRight()
     {
         foreach (Transform transform in piece.transform)
         {
-            float x = transform.position.x;
-            float y = transform.position.y;
-            int xIndex = ActivePieces.convertXtoIndex(x) + 1;
-            int yIndex = ActivePieces.convertYtoIndex(y);
-            if (isOutOfBounds(xIndex, yIndex))
-            {
-                return false;
-            }
-            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            if (testForBox(transform, 1, 0))
             {
                 return true;
             }
         }
-        return false;
+        return testForBox(piece.transform, 1, 0);
     }
     public bool isTouchingPieceLeft()
     {
         foreach (Transform transform in piece.transform)
         {
-            float x = transform.position.x;
-            float y = transform.position.y;
-            int xIndex = ActivePieces.convertXtoIndex(x) - 1;
-            int yIndex = ActivePieces.convertYtoIndex(y);
-            if (isOutOfBounds(xIndex, yIndex))
-            {
-                return false;
-            }
-            if (ActivePieces.placedBoxes[xIndex, yIndex] != null)
+            if (testForBox(transform, -1, 0))
             {
                 return true;
             }
         }
-        return false;
+        return testForBox(piece.transform, -1, 0);
+    }
+
+    private static bool testForBox(Transform transform, int xOffset, int yOffset)
+    {
+        float x = transform.position.x;
+        float y = transform.position.y;
+        int xIndex = ActivePieces.convertXtoIndex(x) + xOffset;
+        int yIndex = ActivePieces.convertYtoIndex(y) + yOffset;
+        if (isOutOfBounds(xIndex, yIndex))
+        {
+            return false;
+        }
+        return ActivePieces.placedBoxes[xIndex, yIndex] != null;
     }
 
     private static bool isOutOfBounds(int xIndex, int yIndex)
@@ -166,6 +155,22 @@ public class Piece : ScriptableObject
     public void lockPiece()
     {
         ActivePieces.addBoxesToArray(piece);
+        //string lol = "";
+        //for (int y = 19; y >= 0; y--)
+        //{
+        //    for (int x = 0; x < 10; x++)
+        //    {
+        //        if (ActivePieces.placedBoxes[x, y] == null)
+        //        {
+        //            lol += "n ";
+        //        } else
+        //        {
+        //            lol += "y ";
+        //        }
+        //    }
+        //    lol += '\n';
+        //}
+        //Debug.Log(lol);
         MovePieces.justLocked = true;
         ClearRows.clearFullRows();
         SpawnPieces.generateNewPiece();
