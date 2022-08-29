@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class RepositionText : MonoBehaviour
+public class HandleText : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI levelNum;
     public GameObject levelBox;
     public TextMeshProUGUI nextText;
     public GameObject nextBox;
@@ -22,16 +23,20 @@ public class RepositionText : MonoBehaviour
         moveToPos(ref text, obj, new Vector3());
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void repositionText()
     {
-        moveToPos(ref levelText, levelBox);
+        moveToPos(ref levelText, levelBox, new Vector3(0, 0.75f));
+        moveToPos(ref levelNum, levelBox, new Vector3(0, -0.75f));
         moveToPos(ref nextText, nextBox, new Vector3(0, 2));
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        repositionText();
+    }
+
+    public void updateLevelText(int level)
+    {
+        levelNum.text = level.ToString();
     }
 }
