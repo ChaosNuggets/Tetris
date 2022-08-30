@@ -55,6 +55,7 @@ public class MovePieces : MonoBehaviour
     {
         handleDownInput();
         makePieceFall();
+        ActivePieces.currentPiece.hideAndUnhideBoxes();
     }
 
     private void handleDownInput()

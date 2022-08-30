@@ -41,11 +41,6 @@ public class Piece : ScriptableObject
         piece = Instantiate(pieces[pieceNum], spawnPos, Quaternion.identity);
     }
 
-    //public void movePiece(Vector3 movePos)
-    //{
-    //    tetromino.transform.position = movePos;
-    //}
-
     public void movePieceR(Vector3 movePos)
     {
         piece.transform.position += movePos;
@@ -60,6 +55,15 @@ public class Piece : ScriptableObject
             return;
         }
         rotStatus = (rotStatus == 3) ? 0 : rotStatus + 1;
+        hideAndUnhideBoxes();
+    }
+
+    public void hideAndUnhideBoxes()
+    {
+        foreach (Transform transform in piece.transform)
+        {
+            transform.gameObject.SetActive(transform.position.y > 10 ? false : true);
+        }
     }
 
     private bool isInsideBox()
@@ -181,7 +185,7 @@ public class Piece : ScriptableObject
         return testForBox(piece.transform, -1, 0);
     }
 
-    private static bool testForBox(Transform transform, int xOffset, int yOffset)
+    private bool testForBox(Transform transform, int xOffset, int yOffset)
     {
         float x = transform.position.x;
         float y = transform.position.y;
@@ -194,7 +198,7 @@ public class Piece : ScriptableObject
         return ActivePieces.placedBoxes[xIndex, yIndex] != null;
     }
 
-    private static bool isOutOfBounds(int xIndex, int yIndex)
+    private bool isOutOfBounds(int xIndex, int yIndex)
     {
         return (xIndex < 0 || xIndex > 9 || yIndex < 0 || yIndex > 22) ? true : false;
     }

@@ -77,6 +77,5 @@ public class HandleLevels : MonoBehaviour
         {
             incrementLevel(currentDivBy10);
         }
-        Debug.Log(linesCleared);
     }
 }
