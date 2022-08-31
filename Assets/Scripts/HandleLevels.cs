@@ -52,6 +52,7 @@ public class HandleLevels : MonoBehaviour
         transitionLines = level <= 9 ? (level + 1) * 10 :
             level >= 16 ? (level - 5) * 10 : 100;
         MovePieces.regularDropTime = calculateDropTime(currentLevel);
+        ht.updateLevelText(level);
     }
 
     private static void incrementLevel(int currentDivBy10)

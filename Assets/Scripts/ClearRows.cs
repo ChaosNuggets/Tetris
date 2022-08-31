@@ -54,6 +54,7 @@ public class ClearRows
                 {
                     ActivePieces.placedBoxes[column, row + 1].transform.position -= new Vector3(0, 1);
                     ActivePieces.placedBoxes[column, row] = ActivePieces.placedBoxes[column, row + 1];
+                    ActivePieces.placedBoxes[column, row].SetActive(ActivePieces.placedBoxes[column, row].transform.position.y > 10 ? false : true);
                     ActivePieces.placedBoxes[column, row + 1] = null;
                 }
             }

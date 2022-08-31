@@ -27,7 +27,7 @@ public class HandleText : MonoBehaviour
     {
         moveToPos(ref levelText, levelBox, new Vector3(0, 0.75f));
         moveToPos(ref levelNum, levelBox, new Vector3(0, -0.75f));
-        moveToPos(ref nextText, nextBox, new Vector3(0, 2));
+        moveToPos(ref nextText, nextBox, new Vector3(0, 1.75f));
     }
 
     private void OnEnable()
@@ -37,6 +37,6 @@ public class HandleText : MonoBehaviour
 
     public void updateLevelText(int level)
     {
-        levelNum.text = level.ToString();
+        levelNum.text = level.ToString("D2");
     }
 }
